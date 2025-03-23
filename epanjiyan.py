@@ -14,8 +14,6 @@ from io import BytesIO, StringIO
 import pymongo
 
 list_df = []
-cc = 'in'
-dom = 'in'
 website = 'epanjiyan'
 base_path = os.path.join(os.getcwd(), 'output', website)
 website_path = os.path.join(base_path, str(date.today()))
