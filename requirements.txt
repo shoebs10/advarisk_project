@@ -1,0 +1,7 @@
+concurrent
+requests
+lxml
+pandas
+pillow
+easyocr
+pymongo
