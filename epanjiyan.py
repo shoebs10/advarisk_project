@@ -19,6 +19,12 @@ base_path = os.path.join(os.getcwd(), 'output', website)
 website_path = os.path.join(base_path, str(date.today()))
 [os.makedirs(directory, exist_ok=True) for directory in [base_path, website_path]]
 
+headers = {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Referer': 'https://epanjiyan.rajasthan.gov.in/e-search-page.aspx',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
+    }
+
 
 def construct_form_data(script_manager, radio_value, view_state, view_state_generator, event_validation,
                         district_id='', tehsil_id='', sro_id='', doc_id='', page='', doc_num=''):
@@ -219,11 +225,7 @@ def extract_view_state_data(s):
 def get_url(sx, location_type, district, tehsil, sro, document_type, document_no):
     session = requests.Session()
 
-    session.headers.update({
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Referer': 'https://epanjiyan.rajasthan.gov.in/e-search-page.aspx',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
-    })
+    session.headers.update(headers)
 
     hit_url = 'https://epanjiyan.rajasthan.gov.in/e-search-page.aspx'
     base_url = urlparse(hit_url)._replace(path='', query='', fragment='').geturl()
@@ -368,7 +370,7 @@ def get_url(sx, location_type, district, tehsil, sro, document_type, document_no
                                         district_id=district_id, tehsil_id=tehsil_id, sro_id=sro_id, doc_id=doc_id,
                                         page=str(page), doc_num=str(document_no))
 
-            if page == 4:
+            if page == 11:
                 break
         else:
             break
@@ -423,13 +425,14 @@ def main(use_thread=False):
             thread(df)
         else:
             for index, row in df.iterrows():
+                sleep(3)
                 dfs = get_url(index, row['location_type'], row['district'], row['tehsil'], row['sro'], row['document_type'], row['document_no'])
                 list_df.append(dfs)
 
             merged_df = pd.concat(list_df, ignore_index=True)
-            # insert_dataframe_to_mongo(merged_df, "advarisk", "epanjiyan")
+            insert_dataframe_to_mongo(merged_df, "advarisk", "epanjiyan")
             merged_df.to_excel(f"{website_path}/{website}_table_{datetime.today().strftime('%m%d%Y')}.xlsx",
-                                  index=False, engine='openpyxl')
+                               index=False, engine='openpyxl')
 
 
 if __name__ == '__main__':
