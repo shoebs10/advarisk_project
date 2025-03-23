@@ -15,7 +15,7 @@ CAPTCHA Handling: If a CAPTCHA is encountered during the process, the function f
 
 Data Scraping: The function scrapes tabular data from the ePanjiyan website's search results. It extracts rows of information into a DataFrame, which is then appended to a list.
 
-Pagination: The function handles pagination and continues scraping until all available pages are processed (maximum of 3 pages).
+Pagination: The function handles pagination and continues scraping until all available pages are processed (maximum of 10 pages for demonstration purpose).
 
 Merging and Structuring Data: After scraping data from all pages, the DataFrames are merged, and relevant metadata (location type, district, tehsil, SRO, etc.) is added to the DataFrame. The columns are reordered for easy analysis.
 
